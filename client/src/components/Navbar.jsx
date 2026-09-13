@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, HardDrive, User, LogOut, Plus, Sun, Moon, Settings } from 'lucide-react';
+import { Home, HardDrive, User, LogOut, Plus, LogIn, Sun, Moon, Settings } from 'lucide-react';
 
 export const Navbar = ({ 
   user, 
@@ -92,10 +92,10 @@ export const Navbar = ({
             </button>
           </div>
         ) : (
-          <button className="btn btn-secondary btn-sm nav-action-btn" onClick={onOpenAuth} title="Sign In to Cloud Drive">
-            <HardDrive size={14} color="var(--accent-cyan)" />
-            <span className="nav-btn-text">Sign In / Drive</span>
-            <span className="nav-btn-text-mobile">Drive</span>
+          <button className="btn btn-secondary btn-sm nav-action-btn" onClick={onOpenAuth} title="Sign In to DropThing">
+            <LogIn size={15} color="var(--accent-primary)" />
+            <span className="nav-btn-text">Sign In</span>
+            <span className="nav-btn-text-mobile">Sign In</span>
           </button>
         )}
       </div>
