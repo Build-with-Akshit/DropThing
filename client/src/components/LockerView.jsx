@@ -145,35 +145,47 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
   }, []);
 
   // Stage 2: Dynamic Live Processing & Cloud Encryption Percentage
-  const startProcessingStage = () => {
+  const startProcessingStage = (totalBytes = 0) => {
     cleanupProcessTimer();
     setUploadPhase('processing');
-    setProcessProgress(8);
+    setProcessProgress(6);
     setProcessStatus('Encrypting payload & preparing cloud bridge...');
+
+    const totalMb = (totalBytes || 1024 * 1024) / (1024 * 1024);
+    // Dynamic expected cloud sync duration based on file size: minimum 2.5s, plus ~1.2s per MB
+    const expectedDurationMs = Math.max(2500, Math.min(60000, Math.round(totalMb * 1200) + 2000));
 
     const startTime = Date.now();
     processTimerRef.current = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      let next = 8;
-      let statusMsg = 'Encrypting payload & preparing cloud bridge...';
+      const progressRatio = Math.min(1, elapsed / expectedDurationMs);
 
-      if (elapsed < 800) {
-        next = Math.round(8 + (elapsed / 800) * 24); // 8% -> 32%
+      // Smooth progress curve: fast at start, naturally decelerating towards 92-95%
+      let next;
+      if (progressRatio < 0.6) {
+        next = Math.round(6 + (progressRatio / 0.6) * 59); // Reaches ~65%
+      } else if (progressRatio < 1) {
+        next = Math.round(65 + ((progressRatio - 0.6) / 0.4) * 25); // Reaches ~90%
+      } else {
+        // If server takes longer than expected, gently tick 1% every 1.5s up to 96%
+        const overtime = elapsed - expectedDurationMs;
+        next = Math.min(96, Math.round(90 + (overtime / 1500)));
+      }
+
+      let statusMsg = 'Encrypting payload & preparing cloud bridge...';
+      if (next < 25) {
         statusMsg = 'Encrypting payload & generating cloud checksum...';
-      } else if (elapsed < 2400) {
-        next = Math.round(32 + ((elapsed - 800) / 1600) * 36); // 32% -> 68%
+      } else if (next < 65) {
         statusMsg = 'Streaming object to Supabase S3 cloud bucket...';
-      } else if (elapsed < 4200) {
-        next = Math.round(68 + ((elapsed - 2400) / 1800) * 22); // 68% -> 90%
+      } else if (next < 88) {
         statusMsg = 'Indexing file metadata and access tokens in DB...';
       } else {
-        next = Math.min(98, Math.round(90 + ((elapsed - 4200) / 4000) * 8)); // 90% -> 98%
         statusMsg = 'Finalizing cloud verification & locker state...';
       }
 
       setProcessProgress(next);
       setProcessStatus(statusMsg);
-    }, 120);
+    }, 150);
   };
 
   // Finalize Upload Success with Smooth 100% Transition
@@ -207,6 +219,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
   const handleFileUpload = async (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+    const totalBytes = Array.from(files).reduce((acc, f) => acc + (f.size || 0), 0);
 
     try {
       cleanupProcessTimer();
@@ -224,7 +237,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           if (percent >= 100) {
             setUploadPhase((curr) => {
               if (curr === 'upload') {
-                startProcessingStage();
+                startProcessingStage(totalBytes);
                 return 'processing';
               }
               return curr;
@@ -258,6 +271,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
     setIsDragging(false);
     const droppedFiles = e.dataTransfer.files;
     if (!droppedFiles || droppedFiles.length === 0) return;
+    const totalBytes = Array.from(droppedFiles).reduce((acc, f) => acc + (f.size || 0), 0);
 
     try {
       cleanupProcessTimer();
@@ -275,7 +289,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           if (percent >= 100) {
             setUploadPhase((curr) => {
               if (curr === 'upload') {
-                startProcessingStage();
+                startProcessingStage(totalBytes);
                 return 'processing';
               }
               return curr;
