@@ -96,7 +96,7 @@ const uploadFileToStorage = async (file) => {
  */
 const getFileStream = async (storedName) => {
   if (isCloud) {
-    try {
+    // try {
       const { GetObjectCommand } = require('@aws-sdk/client-s3');
       const command = new GetObjectCommand({
         Bucket: s3BucketName,
@@ -110,18 +110,18 @@ const getFileStream = async (storedName) => {
         contentLength: response.ContentLength,
         contentType: response.ContentType
       };
-    } catch (cloudErr) {
-      console.warn(`[Storage] Cloud fetch missed for ${storedName} (${cloudErr.name || cloudErr.Code}), checking local fallback...`);
-      const localFilePath = path.join(uploadDir, storedName);
-      if (fs.existsSync(localFilePath)) {
-        return {
-          isCloud: false,
-          filePath: localFilePath,
-          stream: fs.createReadStream(localFilePath)
-        };
-      }
-      return null;
-    }
+    // } catch (cloudErr) {
+    //   console.warn(`[Storage] Cloud fetch missed for ${storedName} (${cloudErr.name || cloudErr.Code}), checking local fallback...`);
+    //   const localFilePath = path.join(uploadDir, storedName);
+    //   if (fs.existsSync(localFilePath)) {
+    //     return {
+    //       isCloud: false,
+    //       filePath: localFilePath,
+    //       stream: fs.createReadStream(localFilePath)
+    //     };
+    //   }
+    //   return null;
+    // }
   }
 
   // Local storage
