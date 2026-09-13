@@ -43,4 +43,32 @@ router.get('/items/view/:id', itemController.viewFile);
 // Delete single item
 router.delete('/items/:id', itemController.deleteItem);
 
+// ==================== CRON / HEALTH ROUTES ====================
+const { runCleanup } = require('../services/cleanupService');
+
+// External Cron Trigger (e.g. cron-job.org, EasyCron, GitHub Actions, Vercel Cron)
+// Hitting this endpoint also acts as a free keep-alive ping for Render free tier!
+router.all('/cron/cleanup', async (req, res) => {
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const authHeader = req.headers['authorization'] || req.query.secret;
+    if (authHeader !== `Bearer ${cronSecret}` && authHeader !== cronSecret) {
+      return res.status(401).json({ error: 'Unauthorized: Invalid cron secret' });
+    }
+  }
+
+  try {
+    const result = await runCleanup();
+    return res.json({
+      success: true,
+      message: `Cleaned up ${result.foldersDeleted} expired folder(s) and ${result.filesDeleted} file(s).`,
+      foldersDeleted: result.foldersDeleted,
+      filesDeleted: result.filesDeleted,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Cleanup failed: ' + err.message });
+  }
+});
+
 module.exports = router;

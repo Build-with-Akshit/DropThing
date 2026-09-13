@@ -13,8 +13,7 @@
 **Send text, links, documents, photos, and files between any phone and public PC with just a 4-digit code.**  
 *Zero login required. Zero traces left behind.*
 
-[Live Demo](https://dropthing.vercel.app) • [Features](#-key-features) • [Quick Start](#-quick-start) • [Deployment](#-free-cloud-deployment-guide)
-
+[Live Demo](https://dropthing.vercel.app)
 </div>
 
 ---
@@ -204,6 +203,41 @@ Open your browser at **`http://localhost:5173`**.
 4. Add Environment Variable:
    - `VITE_API_URL=https://your-dropthing-api.onrender.com`
 5. Click **Deploy**!
+
+---
+
+## ⏰ Automated Cron Job (24h File Expiration & Keep-Alive)
+
+DropThing automatically destroys expired temporary lockers and their uploaded files after 24 hours. Because free hosting providers like Render spin down after 15 minutes of inactivity, you can configure an automated cron trigger using any of these methods:
+
+### Option A: Free Cron-Job.org (Recommended — 1-Minute Setup)
+1. Sign up on [cron-job.org](https://cron-job.org/) (100% Free).
+2. Click **Create Cronjob**:
+   - **Title**: `DropThing Cleanup & Keep-Alive`
+   - **URL**: `https://your-dropthing-api.onrender.com/api/cron/cleanup`
+   - **Schedule**: Every `10` or `14` minutes.
+3. Save! This does two vital things:
+   - ⚡ **Keeps your Render server awake 24/7** (zero cold-start delay).
+   - 🗑️ **Cleans up expired 24h files & folders automatically**.
+
+### Option B: GitHub Actions Workflow
+If you prefer running cron jobs via GitHub, you can create `.github/workflows/cleanup-cron.yml` on GitHub:
+```yaml
+name: DropThing 24h Cleanup & Keep-Alive
+on:
+  schedule:
+    - cron: '*/14 * * * *' # Every 14 minutes
+  workflow_dispatch:
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping DropThing
+        run: curl -s "https://your-dropthing-api.onrender.com/api/cron/cleanup"
+```
+
+### Option C: Internal Node-Cron (For VPS / Local / Paid Tiers)
+If your server runs continuously without sleeping, the built-in `node-cron` worker in `server/src/services/cleanupService.js` runs automatically every 10 minutes (configurable via `CLEANUP_CRON_SCHEDULE` in `.env`).
 
 ---
 
