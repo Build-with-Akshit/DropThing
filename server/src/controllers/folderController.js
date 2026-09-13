@@ -111,8 +111,9 @@ const getFolderByCode = async (req, res) => {
 
     // Check if expired
     if (folder.is_temporary && folder.expires_at) {
-      const now = new Date().toISOString();
-      if (folder.expires_at <= now) {
+      const expiresTime = new Date(folder.expires_at).getTime();
+      const nowTime = Date.now();
+      if (expiresTime <= nowTime) {
         // Purge files immediately
         const files = await db.prepare(`
           SELECT stored_name FROM items 
@@ -137,9 +138,9 @@ const getFolderByCode = async (req, res) => {
     // Calculate time remaining in seconds for temporary folders
     let timeLeftSeconds = null;
     if (folder.is_temporary && folder.expires_at) {
-      const expiresDate = new Date(folder.expires_at.endsWith('Z') ? folder.expires_at : folder.expires_at + 'Z').getTime();
-      const nowDate = Date.now();
-      timeLeftSeconds = Math.max(0, Math.floor((expiresDate - nowDate) / 1000));
+      const expiresTime = new Date(folder.expires_at).getTime();
+      const nowTime = Date.now();
+      timeLeftSeconds = Math.max(0, Math.floor((expiresTime - nowTime) / 1000));
     }
 
     return res.json({
@@ -148,7 +149,7 @@ const getFolderByCode = async (req, res) => {
         code: folder.code,
         name: folder.name,
         is_temporary: Boolean(folder.is_temporary),
-        expires_at: folder.expires_at,
+        expires_at: folder.expires_at instanceof Date ? folder.expires_at.toISOString() : folder.expires_at,
         time_left_seconds: timeLeftSeconds,
         created_at: folder.created_at,
         is_owner: req.user ? req.user.id === folder.user_id : false
