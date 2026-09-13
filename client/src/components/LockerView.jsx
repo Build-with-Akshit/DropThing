@@ -894,10 +894,46 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           border-color: rgba(255, 255, 255, 0.2);
           box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
-        .action-text:hover { border-color: var(--accent-cyan); box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25); }
-        .action-photo:hover { border-color: #ec4899; box-shadow: 0 8px 24px rgba(236, 72, 153, 0.25); }
-        .action-video:hover { border-color: #f43f5e; box-shadow: 0 8px 24px rgba(244, 63, 94, 0.25); }
-        .action-anyfile:hover { border-color: var(--accent-amber); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
+        /* Tinted Pastel Backgrounds & Soft Borders */
+        .action-text {
+          background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, var(--bg-card) 100%);
+          border: 1px solid rgba(6, 182, 212, 0.22);
+        }
+        .action-text:hover {
+          background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, var(--bg-card-hover) 100%);
+          border-color: var(--accent-cyan);
+          box-shadow: 0 8px 24px rgba(6, 182, 212, 0.22);
+        }
+
+        .action-photo {
+          background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, var(--bg-card) 100%);
+          border: 1px solid rgba(236, 72, 153, 0.22);
+        }
+        .action-photo:hover {
+          background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, var(--bg-card-hover) 100%);
+          border-color: #ec4899;
+          box-shadow: 0 8px 24px rgba(236, 72, 153, 0.22);
+        }
+
+        .action-video {
+          background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, var(--bg-card) 100%);
+          border: 1px solid rgba(244, 63, 94, 0.22);
+        }
+        .action-video:hover {
+          background: linear-gradient(135deg, rgba(244, 63, 94, 0.15) 0%, var(--bg-card-hover) 100%);
+          border-color: #f43f5e;
+          box-shadow: 0 8px 24px rgba(244, 63, 94, 0.22);
+        }
+
+        .action-anyfile {
+          background: linear-gradient(135deg, rgba(245, 158, 11, 0.09) 0%, var(--bg-card) 100%);
+          border: 1px solid rgba(245, 158, 11, 0.24);
+        }
+        .action-anyfile:hover {
+          background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, var(--bg-card-hover) 100%);
+          border-color: var(--accent-amber);
+          box-shadow: 0 8px 24px rgba(245, 158, 11, 0.22);
+        }
 
         .action-icon-circle {
           width: 44px;
@@ -907,11 +943,12 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
-        .text-circle { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
-        .photo-circle { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
-        .video-circle { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
-        .anyfile-circle { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+        .text-circle { background: rgba(6, 182, 212, 0.16); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.25); }
+        .photo-circle { background: rgba(236, 72, 153, 0.16); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.25); }
+        .video-circle { background: rgba(244, 63, 94, 0.16); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.25); }
+        .anyfile-circle { background: rgba(245, 158, 11, 0.16); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.25); }
 
         .action-btn-texts {
           display: flex;
