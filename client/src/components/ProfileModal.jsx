@@ -64,12 +64,21 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
     }
   }, [isOpen, user]);
 
-  // Close on Escape key
+  // Keyboard shortcuts: Escape to close, Ctrl+Shift+H to toggle password visibility
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' || e.keyCode === 27) {
         onClose();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'h' || e.key === 'H')) {
+        e.preventDefault();
+        setShowCurrentPw((prev) => {
+          const next = !prev;
+          setShowNewPw(next);
+          setShowConfirmPw(next);
+          return next;
+        });
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -396,7 +405,7 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
                     type="button"
                     onClick={() => setShowCurrentPw(!showCurrentPw)}
                     className="password-toggle-btn"
-                    title={showCurrentPw ? 'Hide password' : 'Show password'}
+                    title={showCurrentPw ? 'Hide password (Ctrl+Shift+H)' : 'Show password (Ctrl+Shift+H)'}
                     tabIndex={-1}
                   >
                     {showCurrentPw ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -431,7 +440,7 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
                     type="button"
                     onClick={() => setShowNewPw(!showNewPw)}
                     className="password-toggle-btn"
-                    title={showNewPw ? 'Hide password' : 'Show password'}
+                    title={showNewPw ? 'Hide password (Ctrl+Shift+H)' : 'Show password (Ctrl+Shift+H)'}
                     tabIndex={-1}
                   >
                     {showNewPw ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -466,7 +475,7 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
                     type="button"
                     onClick={() => setShowConfirmPw(!showConfirmPw)}
                     className="password-toggle-btn"
-                    title={showConfirmPw ? 'Hide password' : 'Show password'}
+                    title={showConfirmPw ? 'Hide password (Ctrl+Shift+H)' : 'Show password (Ctrl+Shift+H)'}
                     tabIndex={-1}
                   >
                     {showConfirmPw ? <EyeOff size={16} /> : <Eye size={16} />}

@@ -11,12 +11,16 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, onNotify }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Close on Escape key
+  // Keyboard shortcuts: Escape to close, Ctrl+Shift+H to toggle password visibility
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' || e.keyCode === 27) {
         onClose();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'h' || e.key === 'H')) {
+        e.preventDefault();
+        setShowPassword((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -141,7 +145,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, onNotify }) => {
                     borderRadius: '4px',
                     transition: 'color 0.2s ease'
                   }}
-                  title={showPassword ? 'Hide password' : 'Show password'}
+                  title={showPassword ? 'Hide password (Ctrl+Shift+H)' : 'Show password (Ctrl+Shift+H)'}
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
