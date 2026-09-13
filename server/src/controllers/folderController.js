@@ -29,10 +29,11 @@ const createQuickDrop = async (req, res) => {
     const folderName = req.body.name?.trim() || `Quick Drop #${code}`;
 
     // Expire exactly 24 hours from now
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     await db.prepare(`
       INSERT INTO folders (id, user_id, code, name, is_temporary, expires_at)
-      VALUES (?, NULL, ?, ?, 1, datetime('now', '+24 hours'))
-    `).run(folderId, code, folderName);
+      VALUES (?, NULL, ?, ?, 1, ?)
+    `).run(folderId, code, folderName, expiresAt);
 
     const folder = await db.prepare('SELECT * FROM folders WHERE id = ?').get(folderId);
 

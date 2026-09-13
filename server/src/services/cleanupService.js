@@ -5,10 +5,11 @@ const { deleteFile } = require('./storageService');
 const runCleanup = async () => {
   try {
     // Find all expired temporary folders
+    const nowIso = new Date().toISOString();
     const expiredFolders = await db.prepare(`
       SELECT id, code, name FROM folders 
-      WHERE is_temporary = 1 AND expires_at <= datetime('now')
-    `).all();
+      WHERE is_temporary = 1 AND expires_at IS NOT NULL AND expires_at <= ?
+    `).all(nowIso);
 
     if (!expiredFolders || expiredFolders.length === 0) {
       return 0;
