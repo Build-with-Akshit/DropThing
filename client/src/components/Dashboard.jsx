@@ -46,15 +46,16 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onNotify }) => 
   };
 
   const formatFileSize = (bytes) => {
-    if (!bytes || bytes === 0) return '0 B';
+    const num = Number(bytes);
+    if (!num || isNaN(num) || num <= 0) return '0 B';
     const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.min(sizes.length - 1, Math.floor(Math.log(num) / Math.log(k)));
+    return parseFloat((num / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
-  const totalStorage = folders.reduce((acc, f) => acc + (f.total_size_bytes || 0), 0);
-  const totalItems = folders.reduce((acc, f) => acc + (f.item_count || 0), 0);
+  const totalStorage = folders.reduce((acc, f) => acc + Number(f.total_size_bytes || 0), 0);
+  const totalItems = folders.reduce((acc, f) => acc + Number(f.item_count || 0), 0);
 
   return (
     <div className="dashboard-container">

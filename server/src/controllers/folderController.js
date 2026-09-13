@@ -175,7 +175,13 @@ const getUserFolders = async (req, res) => {
       ORDER BY f.created_at DESC
     `).all(req.user.id);
 
-    return res.json({ folders });
+    const mappedFolders = folders.map(f => ({
+      ...f,
+      item_count: parseInt(f.item_count || 0, 10),
+      total_size_bytes: parseInt(f.total_size_bytes || 0, 10)
+    }));
+
+    return res.json({ folders: mappedFolders });
   } catch (err) {
     console.error('Error retrieving user folders:', err);
     return res.status(500).json({ error: 'Failed to retrieve your folders.' });
