@@ -12,8 +12,7 @@ import {
   AlertCircle,
   Eye, 
   EyeOff, 
-  Calendar,
-  Save,
+  Save, 
   Check
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -86,16 +85,6 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.min(sizes.length - 1, Math.floor(Math.log(num) / Math.log(k)));
     return parseFloat((num / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'Active Member';
-    try {
-      const d = new Date(dateStr);
-      return `Member since ${d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}`;
-    } catch {
-      return 'Active Member';
-    }
   };
 
   const handleUpdateProfile = async (e) => {
@@ -205,16 +194,6 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
           <div className="profile-identity-info">
             <h3 className="profile-identity-name">{user.name}</h3>
             <p className="profile-identity-email">{user.email}</p>
-            <div className="profile-identity-meta">
-              <span className="profile-badge">
-                <Calendar size={12} />
-                {formatDate(userStats?.created_at || user.created_at)}
-              </span>
-              <span className="profile-badge badge-cloud">
-                <ShieldCheck size={12} color="var(--accent-emerald)" />
-                Supabase Cloud Protected
-              </span>
-            </div>
           </div>
         </div>
 
@@ -537,10 +516,7 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
           )}
         </div>
 
-        <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            Cloud Database: Supabase PostgreSQL
-          </span>
+        <div className="modal-footer" style={{ justifyContent: 'flex-end' }}>
           <button type="button" className="btn btn-secondary btn-sm" onClick={onClose}>
             Close
           </button>
