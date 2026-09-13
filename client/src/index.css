@@ -765,14 +765,18 @@ button, input, select, textarea, a {
     padding: 0 0.85rem;
   }
   .brand {
-    gap: 0;
+    gap: 0.5rem;
   }
   .brand-icon {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 10px;
   }
-  .brand-name-desktop {
+  .brand-name {
+    font-size: 1.08rem;
+    display: inline-block;
+  }
+  .brand-name-subview {
     display: none !important;
   }
   .brand-badge-desktop {

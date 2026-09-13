@@ -16,12 +16,24 @@ export const Navbar = ({
 }) => {
   return (
     <header className="navbar">
-      <div className="brand" onClick={onGoHome} title="Go to Home">
-        <div className="brand-icon" title="Home">
-          <Home size={19} strokeWidth={2.2} />
+      <div 
+        className="brand" 
+        onClick={onGoHome} 
+        title={currentView === 'home' ? 'DropThing' : 'Go to Home'}
+      >
+        <div className="brand-icon" title={currentView === 'home' ? 'DropThing' : 'Go to Home'}>
+          {currentView === 'home' ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          ) : (
+            <Home size={19} strokeWidth={2.2} />
+          )}
         </div>
         <div>
-          <span className="brand-name brand-name-desktop">DropThing</span>
+          <span className={`brand-name ${currentView !== 'home' ? 'brand-name-subview' : ''}`}>
+            DropThing
+          </span>
         </div>
         <span className="brand-badge brand-badge-desktop">Cloud Bridge</span>
       </div>
