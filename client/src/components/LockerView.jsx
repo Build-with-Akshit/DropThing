@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   FileText, 
   Image as ImageIcon, 
-  File, 
   Package, 
   Copy, 
   Check, 

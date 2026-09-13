@@ -1,7 +1,7 @@
 {
-  "name": "droppin-root",
+  "name": "dropthing-root",
   "version": "1.0.0",
-  "description": "DropPin - Instant PIN-Based Cloud File & Text Bridge",
+  "description": "DropThing - Instant PIN-Based Cloud File & Text Bridge",
   "scripts": {
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",

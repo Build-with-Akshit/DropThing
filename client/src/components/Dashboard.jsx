@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Folder, Plus, Copy, Check, ArrowRight, Trash2, HardDrive, Clock, ShieldCheck } from 'lucide-react';
+import { Folder, Plus, Copy, Check, ArrowRight, Trash2, HardDrive, ShieldCheck } from 'lucide-react';
 import { api } from '../services/api';
 
 export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onNotify }) => {
@@ -61,7 +61,9 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onNotify }) => 
       {/* Header Profile Bar */}
       <div className="dashboard-header">
         <div>
-          <h1 className="dashboard-title">My Cloud Drive</h1>
+          <h1 className="dashboard-title">
+            {user?.username ? `${user.username}'s Cloud Drive` : 'My Cloud Drive'}
+          </h1>
           <p className="dashboard-subtitle">
             Permanent cloud storage spaces. Access any of these on public/library PCs using their short PIN.
           </p>

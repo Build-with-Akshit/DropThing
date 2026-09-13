@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import QRCode from 'qrcode';
-import { X, Copy, Check } from 'lucide-react';
+import { X, Copy } from 'lucide-react';
 
 export const QrModal = ({ code, isOpen, onClose, onCopyLink }) => {
   const canvasRef = useRef(null);
