@@ -61,34 +61,42 @@ const uploadFiles = async (req, res) => {
       VALUES (?, ?, 'file', ?, ?, ?, ?, ?, ?)
     `);
 
-    for (const file of req.files) {
+    const uploadTasks = req.files.map(async (file) => {
       const itemId = uuidv4();
       const category = categorizeFile(file.originalname, file.mimetype);
-
-      // Sync to Cloudflare R2 if cloud storage is enabled, else keeps in local disk
       const storageResult = await uploadFileToStorage(file);
-
-      await insertStmt.run(
+      return {
         itemId,
+        file,
+        category,
+        stored_name: storageResult.stored_name
+      };
+    });
+
+    const processedFiles = await Promise.all(uploadTasks);
+
+    for (const item of processedFiles) {
+      await insertStmt.run(
+        item.itemId,
         folderId,
-        file.originalname,
-        file.originalname,
-        storageResult.stored_name,
-        file.size,
-        file.mimetype,
-        category
+        item.file.originalname,
+        item.file.originalname,
+        item.stored_name,
+        item.file.size,
+        item.file.mimetype,
+        item.category
       );
 
       const nowIso = new Date().toISOString();
       uploadedItems.push({
-        id: itemId,
+        id: item.itemId,
         folder_id: folderId,
         item_type: 'file',
-        title: file.originalname,
-        file_name: file.originalname,
-        file_size: file.size,
-        mime_type: file.mimetype,
-        category,
+        title: item.file.originalname,
+        file_name: item.file.originalname,
+        file_size: item.file.size,
+        mime_type: item.file.mimetype,
+        category: item.category,
         created_at: nowIso
       });
     }
