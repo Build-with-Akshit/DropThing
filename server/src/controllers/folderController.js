@@ -21,19 +21,20 @@ const generateUniqueCode = async (length = 4) => {
   return uuidv4().substring(0, 6).toUpperCase();
 };
 
-// 1. Create Quick 24h Drop (Guest Mode - No Login)
+// 1. Create Quick 24h Drop (Guest or Logged in User)
 const createQuickDrop = async (req, res) => {
   try {
     const code = await generateUniqueCode(4);
     const folderId = uuidv4();
     const folderName = req.body.name?.trim() || `Quick Drop #${code}`;
+    const userId = req.user ? req.user.id : null;
 
     // Expire exactly 24 hours from now
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     await db.prepare(`
       INSERT INTO folders (id, user_id, code, name, is_temporary, expires_at)
-      VALUES (?, NULL, ?, ?, 1, ?)
-    `).run(folderId, code, folderName, expiresAt);
+      VALUES (?, ?, ?, ?, 1, ?)
+    `).run(folderId, userId, code, folderName, expiresAt);
 
     const folder = await db.prepare('SELECT * FROM folders WHERE id = ?').get(folderId);
 
@@ -162,7 +163,7 @@ const getFolderByCode = async (req, res) => {
   }
 };
 
-// 4. Get all folders belonging to logged-in user
+// 4. Get all folders belonging to logged-in user (both permanent and active temporary)
 const getUserFolders = async (req, res) => {
   try {
     const folders = await db.prepare(`
@@ -176,11 +177,32 @@ const getUserFolders = async (req, res) => {
       ORDER BY f.created_at DESC
     `).all(req.user.id);
 
-    const mappedFolders = folders.map(f => ({
-      ...f,
-      item_count: parseInt(f.item_count || 0, 10),
-      total_size_bytes: parseInt(f.total_size_bytes || 0, 10)
-    }));
+    const nowTime = Date.now();
+    const mappedFolders = folders
+      .filter(f => {
+        // Filter out temporary folders that have already expired
+        if (f.is_temporary && f.expires_at) {
+          const expiresTime = new Date(f.expires_at).getTime();
+          return expiresTime > nowTime;
+        }
+        return true;
+      })
+      .map(f => {
+        let timeLeftSeconds = null;
+        if (f.is_temporary && f.expires_at) {
+          const expiresTime = new Date(f.expires_at).getTime();
+          timeLeftSeconds = Math.max(0, Math.floor((expiresTime - nowTime) / 1000));
+        }
+
+        return {
+          ...f,
+          is_temporary: Boolean(f.is_temporary),
+          expires_at: f.expires_at instanceof Date ? f.expires_at.toISOString() : f.expires_at,
+          time_left_seconds: timeLeftSeconds,
+          item_count: parseInt(f.item_count || 0, 10),
+          total_size_bytes: parseInt(f.total_size_bytes || 0, 10)
+        };
+      });
 
     return res.json({ folders: mappedFolders });
   } catch (err) {

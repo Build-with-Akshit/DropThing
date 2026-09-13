@@ -21,7 +21,10 @@ export const api = {
   async createQuickDrop(name) {
     const res = await fetch(`${API_BASE}/folders/quick-drop`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify({ name })
     });
     const data = await res.json();

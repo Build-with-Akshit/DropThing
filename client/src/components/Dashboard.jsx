@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Folder, Plus, Copy, Check, ArrowRight, Trash2, HardDrive, ShieldCheck, Settings } from 'lucide-react';
+import { 
+  Folder, 
+  Plus, 
+  Copy, 
+  Check, 
+  ArrowRight, 
+  Trash2, 
+  HardDrive, 
+  ShieldCheck, 
+  Settings, 
+  Clock, 
+  Zap 
+} from 'lucide-react';
 import { api } from '../services/api';
 
 export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, onNotify }) => {
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState(null);
+  const [filterTab, setFilterTab] = useState('all'); // 'all' | 'permanent' | 'temporary'
+  const [creatingQuickDrop, setCreatingQuickDrop] = useState(false);
 
   const fetchFolders = async () => {
     try {
@@ -21,6 +35,22 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
 
   useEffect(() => {
     fetchFolders();
+  }, []);
+
+  // Tick countdown timer for temporary folders
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFolders((prev) =>
+        prev.map((f) => {
+          if (f.is_temporary && f.time_left_seconds > 0) {
+            return { ...f, time_left_seconds: f.time_left_seconds - 1 };
+          }
+          return f;
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const handleCopyCode = (code, e) => {
@@ -39,9 +69,22 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
     try {
       await api.deleteFolder(folderId);
       onNotify('Folder deleted successfully.', 'info');
-      setFolders(folders.filter(f => f.id !== folderId));
+      setFolders(folders.filter((f) => f.id !== folderId));
     } catch (err) {
       onNotify(err.message, 'error');
+    }
+  };
+
+  const handleCreateQuickDrop = async () => {
+    try {
+      setCreatingQuickDrop(true);
+      const data = await api.createQuickDrop();
+      onNotify(`Instant 24h Drop #${data.folder.code} created!`, 'success');
+      onOpenFolder(data.folder.code);
+    } catch (err) {
+      onNotify(err.message, 'error');
+    } finally {
+      setCreatingQuickDrop(false);
     }
   };
 
@@ -53,6 +96,24 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
     const i = Math.min(sizes.length - 1, Math.floor(Math.log(num) / Math.log(k)));
     return parseFloat((num / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
+
+  const formatCountdown = (totalSec) => {
+    if (!totalSec || totalSec <= 0) return 'Expiring soon';
+    const hours = Math.floor(totalSec / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
+    if (hours > 0) return `${hours}h ${minutes}m left`;
+    return `${minutes}m ${seconds}s left`;
+  };
+
+  const permanentFolders = folders.filter((f) => !f.is_temporary);
+  const temporaryFolders = folders.filter((f) => Boolean(f.is_temporary));
+
+  const displayedFolders = folders.filter((f) => {
+    if (filterTab === 'permanent') return !f.is_temporary;
+    if (filterTab === 'temporary') return Boolean(f.is_temporary);
+    return true;
+  });
 
   const totalStorage = folders.reduce((acc, f) => acc + Number(f.total_size_bytes || 0), 0);
   const totalItems = folders.reduce((acc, f) => acc + Number(f.item_count || 0), 0);
@@ -66,7 +127,7 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
             {user?.name ? `${user.name}'s Cloud Drive` : 'My Cloud Drive'}
           </h1>
           <p className="dashboard-subtitle">
-            Permanent cloud storage spaces. Access any of these on public/library PCs using their short PIN.
+            Permanent cloud storage spaces & 24h quick drops. Access any of these on public/library PCs using their short PIN.
           </p>
         </div>
 
@@ -76,9 +137,20 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
             <span>Account Settings</span>
           </button>
 
+          <button 
+            className="btn btn-secondary" 
+            onClick={handleCreateQuickDrop} 
+            disabled={creatingQuickDrop}
+            title="Create 24-hour instant drop"
+            style={{ border: '1px solid rgba(245, 158, 11, 0.4)', color: 'var(--text-primary)' }}
+          >
+            <Clock size={15} color="var(--accent-amber)" />
+            <span>{creatingQuickDrop ? 'Creating...' : '+ New 24h Drop'}</span>
+          </button>
+
           <button className="btn btn-primary" onClick={onOpenNewFolder}>
             <Plus size={16} />
-            Create New Folder
+            <span>+ New Permanent Folder</span>
           </button>
         </div>
       </div>
@@ -90,8 +162,13 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
             <Folder size={22} />
           </div>
           <div>
-            <div className="stat-num">{folders.length}</div>
+            <div className="stat-num">{permanentFolders.length}</div>
             <div className="stat-label">Permanent Folders</div>
+            {temporaryFolders.length > 0 && (
+              <div style={{ fontSize: '0.72rem', color: 'var(--accent-amber)', fontWeight: 600, marginTop: '2px' }}>
+                + {temporaryFolders.length} active 24h {temporaryFolders.length === 1 ? 'drop' : 'drops'}
+              </div>
+            )}
           </div>
         </div>
 
@@ -111,9 +188,38 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           </div>
           <div>
             <div className="stat-num">{formatFileSize(totalStorage)}</div>
-            <div className="stat-label">Storage Used (Never Expires)</div>
+            <div className="stat-label">Storage Used</div>
           </div>
         </div>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="dashboard-tabs-bar">
+        <button
+          className={`dash-tab-btn ${filterTab === 'all' ? 'active' : ''}`}
+          onClick={() => setFilterTab('all')}
+        >
+          <span>All Spaces</span>
+          <span className="dash-tab-count">{folders.length}</span>
+        </button>
+
+        <button
+          className={`dash-tab-btn ${filterTab === 'permanent' ? 'active' : ''}`}
+          onClick={() => setFilterTab('permanent')}
+        >
+          <Folder size={14} />
+          <span>Permanent</span>
+          <span className="dash-tab-count">{permanentFolders.length}</span>
+        </button>
+
+        <button
+          className={`dash-tab-btn ${filterTab === 'temporary' ? 'active' : ''}`}
+          onClick={() => setFilterTab('temporary')}
+        >
+          <Clock size={14} />
+          <span>24h Quick Drops</span>
+          <span className="dash-tab-count">{temporaryFolders.length}</span>
+        </button>
       </div>
 
       {/* Folder Grid */}
@@ -121,42 +227,78 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
           Loading your Drive spaces...
         </div>
-      ) : folders.length === 0 ? (
+      ) : displayedFolders.length === 0 ? (
         <div className="empty-dashboard-card">
-          <Folder size={48} color="var(--accent-primary)" style={{ opacity: 0.8 }} />
-          <h3>No permanent folders yet</h3>
-          <p>Create your first permanent folder with a custom or 4-digit PIN to store files lifetime.</p>
-          <button className="btn btn-primary" onClick={onOpenNewFolder} style={{ marginTop: '0.5rem' }}>
-            <Plus size={16} />
-            Create First Folder
-          </button>
+          {filterTab === 'temporary' ? (
+            <>
+              <Clock size={48} color="var(--accent-amber)" style={{ opacity: 0.8 }} />
+              <h3>No active 24h drops</h3>
+              <p>You haven't created any temporary quick drops recently. Create one to transfer files instantly.</p>
+              <button className="btn btn-secondary" onClick={handleCreateQuickDrop} style={{ marginTop: '0.5rem' }}>
+                <Clock size={16} color="var(--accent-amber)" />
+                Create 24h Drop
+              </button>
+            </>
+          ) : (
+            <>
+              <Folder size={48} color="var(--accent-primary)" style={{ opacity: 0.8 }} />
+              <h3>No folders found</h3>
+              <p>Create your first permanent folder with a custom or 4-digit PIN to store files lifetime.</p>
+              <button className="btn btn-primary" onClick={onOpenNewFolder} style={{ marginTop: '0.5rem' }}>
+                <Plus size={16} />
+                Create Permanent Folder
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <div className="folder-grid">
-          {folders.map((folder) => {
+          {displayedFolders.map((folder) => {
             const isCopied = copiedCode === folder.code;
+            const isTemp = Boolean(folder.is_temporary);
+
             return (
               <div 
                 key={folder.id} 
-                className="folder-card"
+                className={`folder-card ${isTemp ? 'card-temporary' : ''}`}
                 onClick={() => onOpenFolder(folder.code)}
               >
                 <div className="folder-card-top">
-                  <div className="folder-icon-wrapper">
-                    <Folder size={24} color="var(--accent-primary)" />
+                  <div className={`folder-icon-wrapper ${isTemp ? 'temp-icon' : ''}`}>
+                    {isTemp ? (
+                      <Clock size={22} color="var(--accent-amber)" />
+                    ) : (
+                      <Folder size={24} color="var(--accent-primary)" />
+                    )}
                   </div>
                   
-                  <div 
-                    className="folder-pin-pill"
-                    onClick={(e) => handleCopyCode(folder.code, e)}
-                    title="Click to copy access PIN"
-                  >
-                    <span>PIN: #{folder.code}</span>
-                    {isCopied ? <Check size={12} color="var(--accent-emerald)" /> : <Copy size={12} />}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {isTemp && (
+                      <span className="dash-temp-pill" title="Auto-destructs in 24 hours">
+                        <Zap size={11} />
+                        <span>{formatCountdown(folder.time_left_seconds)}</span>
+                      </span>
+                    )}
+
+                    <div 
+                      className="folder-pin-pill"
+                      onClick={(e) => handleCopyCode(folder.code, e)}
+                      title="Click to copy access PIN"
+                    >
+                      <span>PIN: #{folder.code}</span>
+                      {isCopied ? <Check size={12} color="var(--accent-emerald)" /> : <Copy size={12} />}
+                    </div>
                   </div>
                 </div>
 
-                <h3 className="folder-name">{folder.name}</h3>
+                <div>
+                  <h3 className="folder-name">{folder.name}</h3>
+                  {isTemp && (
+                    <span style={{ fontSize: '0.72rem', color: 'var(--accent-amber)', fontWeight: 600 }}>
+                      ⚡ 24h Temporary Space
+                    </span>
+                  )}
+                </div>
 
                 <div className="folder-meta-row">
                   <span>{folder.item_count || 0} items</span>
@@ -212,7 +354,7 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 1rem;
-          margin-bottom: 2.5rem;
+          margin-bottom: 2rem;
         }
         .stat-card {
           background: var(--bg-card);
@@ -242,6 +384,52 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           color: var(--text-muted);
           font-weight: 500;
         }
+
+        /* Tabs Bar */
+        .dashboard-tabs-bar {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 1.5rem;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-bottom: 0.75rem;
+          flex-wrap: wrap;
+        }
+        .dash-tab-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 9999px;
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          font-size: 0.85rem;
+          font-weight: 600;
+          font-family: inherit;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .dash-tab-btn:hover {
+          color: var(--text-primary);
+          border-color: var(--border-hover);
+          background: var(--bg-card-hover);
+        }
+        .dash-tab-btn.active {
+          background: var(--accent-primary);
+          color: #ffffff;
+          border-color: var(--accent-primary);
+        }
+        .dash-tab-count {
+          font-size: 0.72rem;
+          padding: 1px 6px;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.2);
+        }
+        [data-theme="light"] .dash-tab-btn:not(.active) .dash-tab-count {
+          background: rgba(0, 0, 0, 0.07);
+        }
+
         .empty-dashboard-card {
           background: var(--bg-card);
           border: 1px dashed rgba(255, 255, 255, 0.15);
@@ -280,6 +468,10 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           transform: translateY(-2px);
           box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.25);
         }
+        .folder-card.card-temporary:hover {
+          border-color: var(--accent-amber);
+          box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.25);
+        }
         .folder-card-top {
           display: flex;
           align-items: center;
@@ -293,6 +485,22 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+        .folder-icon-wrapper.temp-icon {
+          background: rgba(245, 158, 11, 0.15);
+        }
+        .dash-temp-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: var(--accent-amber);
+          background: rgba(245, 158, 11, 0.12);
+          border: 1px solid rgba(245, 158, 11, 0.3);
+          padding: 3px 8px;
+          border-radius: 9999px;
+          letter-spacing: 0.01em;
         }
         .folder-pin-pill {
           display: flex;

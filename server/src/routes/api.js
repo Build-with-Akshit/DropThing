@@ -16,8 +16,8 @@ router.put('/auth/profile', requireAuth, authController.updateProfile);
 router.put('/auth/password', requireAuth, authController.changePassword);
 
 // ==================== FOLDER ROUTES ====================
-// Guest mode (24h auto-delete)
-router.post('/folders/quick-drop', folderController.createQuickDrop);
+// Quick drop (Guest or Account holders)
+router.post('/folders/quick-drop', optionalAuth, folderController.createQuickDrop);
 
 // Permanent folders (Account holders)
 router.post('/folders/permanent', requireAuth, folderController.createPermanentFolder);
