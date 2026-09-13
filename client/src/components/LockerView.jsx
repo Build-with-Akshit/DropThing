@@ -736,6 +736,9 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           margin: 1.5rem auto 3rem;
           padding: 0 1.5rem;
           width: 100%;
+          min-width: 0;
+          overflow-x: hidden;
+          box-sizing: border-box;
           position: relative;
         }
         .locker-loading-state, .locker-error-state {
@@ -856,11 +859,18 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
         }
         .action-buttons-bar {
           margin-bottom: 2rem;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
         }
         .action-buttons-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 1rem;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
         }
         .action-btn {
           background: var(--bg-card);
@@ -874,6 +884,10 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
           text-align: left;
           box-shadow: var(--shadow-card);
+          min-width: 0;
+          max-width: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
         }
         .action-btn:hover {
           transform: translateY(-2px);
@@ -903,15 +917,26 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           display: flex;
           flex-direction: column;
           gap: 2px;
+          min-width: 0;
+          overflow: hidden;
+          flex: 1;
         }
         .action-btn-title {
           font-size: 0.95rem;
           font-weight: 700;
           color: var(--text-primary);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
         }
         .action-btn-desc {
           font-size: 0.75rem;
           color: var(--text-muted);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
         }
         .explorer-container {
           background: var(--bg-card);
@@ -920,6 +945,11 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           padding: 1.5rem;
           box-shadow: var(--shadow-card);
           backdrop-filter: blur(10px);
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          overflow: hidden;
+          box-sizing: border-box;
         }
         .explorer-toolbar {
           display: flex;
@@ -930,6 +960,10 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
           margin-bottom: 1.5rem;
           padding-bottom: 1rem;
           border-bottom: 1px solid var(--border-subtle);
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
         }
         .explorer-tabs {
           display: flex;
@@ -1002,97 +1036,166 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
         }
         @media (max-width: 640px) {
           .locker-page {
-            margin: 0.85rem auto 2rem;
-            padding: 0 0.85rem;
+            margin: 0.75rem auto 2rem;
+            padding: 0 0.75rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            overflow-x: hidden;
+            box-sizing: border-box;
           }
           .locker-banner {
             flex-direction: column;
             align-items: stretch;
-            padding: 1.15rem 1rem;
+            padding: 1rem 0.85rem;
             border-radius: 16px;
-            margin-bottom: 1.15rem;
-            gap: 1rem;
+            margin-bottom: 1rem;
+            gap: 0.85rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+          }
+          .banner-left, .banner-folder-info {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
           }
           .locker-title {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             margin-bottom: 0.35rem;
             word-break: break-word;
+            max-width: 100%;
+          }
+          .banner-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            max-width: 100%;
           }
           .banner-right {
             width: 100%;
+            max-width: 100%;
+            min-width: 0;
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
           }
           .banner-right .btn {
             flex: 1;
+            min-width: 0;
             justify-content: center;
-            padding: 0.5rem 0.65rem;
-            font-size: 0.8rem;
+            padding: 0.45rem 0.45rem;
+            font-size: 0.76rem;
+            white-space: nowrap;
           }
           .banner-right .btn:last-child {
-            flex: 0 0 38px;
+            flex: 0 0 36px;
             padding: 0;
           }
           /* Modern 2x2 Grid for Mobile */
           .action-buttons-bar {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
           }
           .action-buttons-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
           }
           .action-btn {
-            padding: 0.75rem 0.65rem;
-            border-radius: 14px;
-            gap: 0.55rem;
+            padding: 0.65rem 0.5rem;
+            border-radius: 12px;
+            gap: 0.45rem;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
           }
           .action-icon-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            flex-shrink: 0;
+          }
+          .action-btn-texts {
+            min-width: 0;
+            overflow: hidden;
+            flex: 1;
           }
           .action-btn-title {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
           }
           .action-btn-desc {
-            font-size: 0.68rem;
-            line-height: 1.2;
+            font-size: 0.64rem;
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
           }
           /* Drive Explorer Mobile */
           .explorer-container {
-            padding: 1rem 0.85rem;
+            padding: 0.85rem 0.65rem;
             border-radius: 16px;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            overflow: hidden;
           }
           .explorer-toolbar {
             flex-direction: column;
             align-items: stretch;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
+            gap: 0.65rem;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.65rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
           }
           .explorer-tabs {
             width: 100%;
+            max-width: 100%;
+            min-width: 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            gap: 0.35rem;
+            gap: 0.3rem;
             padding-bottom: 2px;
+            box-sizing: border-box;
           }
           .explorer-tabs::-webkit-scrollbar {
             display: none;
           }
           .tab-btn {
-            padding: 5px 11px;
-            font-size: 0.78rem;
+            padding: 4px 9px;
+            font-size: 0.74rem;
+            flex-shrink: 0;
           }
           .explorer-search {
             width: 100%;
+            max-width: 100%;
             min-width: 0;
-            padding: 7px 12px;
+            padding: 6px 10px;
+            box-sizing: border-box;
           }
           .items-grid {
-            grid-template-columns: 1fr;
-            gap: 0.85rem;
+            grid-template-columns: minmax(0, 1fr) !important;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
           }
         }
       `}</style>

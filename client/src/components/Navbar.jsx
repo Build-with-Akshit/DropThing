@@ -52,7 +52,7 @@ export const Navbar = ({
         {user ? (
           <div className="user-nav-group">
             <button
-              className="btn btn-secondary btn-sm nav-action-btn"
+              className={`btn btn-secondary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
               onClick={onOpenDashboard}
               title="My Drive Spaces"
             >
@@ -62,7 +62,7 @@ export const Navbar = ({
             </button>
 
             <button
-              className="btn btn-primary btn-sm nav-action-btn"
+              className={`btn btn-primary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
               onClick={onOpenNewFolder}
               title="Create New Folder"
             >
@@ -84,7 +84,7 @@ export const Navbar = ({
             </button>
 
             <button
-              className="btn btn-secondary btn-sm nav-logout-btn"
+              className={`btn btn-secondary btn-sm nav-logout-btn ${currentFolder ? 'desktop-only' : ''}`}
               onClick={onLogout}
               title="Logout"
             >
