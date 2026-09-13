@@ -13,7 +13,10 @@ import {
   UploadCloud, 
   Sparkles,
   Link2,
-  Film
+  Film,
+  AlertCircle,
+  ArrowLeft,
+  Plus
 } from 'lucide-react';
 import { api } from '../services/api';
 import { TextCard } from './TextCard';
@@ -21,7 +24,7 @@ import { FileCard } from './FileCard';
 import { TextModal } from './TextModal';
 import { QrModal } from './QrModal';
 
-export const LockerView = ({ code, onNotify }) => {
+export const LockerView = ({ code, onNotify, onGoHome }) => {
   const [folder, setFolder] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -218,17 +221,62 @@ export const LockerView = ({ code, onNotify }) => {
   if (loading) {
     return (
       <div className="locker-loading-state">
-        <div className="spinner"></div>
-        <p>Connecting to Cloud Locker #{code}...</p>
+        <div className="locker-loading-card">
+          <div className="loading-orbit-wrapper">
+            <div className="loading-orbit-ring"></div>
+            <div className="loading-orbit-ring-inner"></div>
+            <div className="loading-center-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent-primary)">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+          </div>
+
+          <h2 className="loading-title">Connecting to Cloud Locker</h2>
+          <div className="loading-pin-pill">
+            <span className="loading-pin-label">Locker PIN</span>
+            <span className="loading-pin-code">#{code}</span>
+          </div>
+
+          <div className="loading-progress-track">
+            <div className="loading-progress-bar"></div>
+          </div>
+
+          <p className="loading-status-text">
+            Establishing secure encrypted bridge...
+          </p>
+
+          <div className="loading-security-badge">
+            <ShieldCheck size={14} color="var(--accent-emerald)" />
+            <span>Zero-Knowledge • SSL Cloud Bridge</span>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!folder) {
     return (
-      <div className="locker-error-state">
-        <h2>Locker Not Found</h2>
-        <p>The code "{code}" does not exist or may have already expired.</p>
+      <div className="locker-loading-state">
+        <div className="locker-error-card">
+          <div className="error-icon-wrapper">
+            <AlertCircle size={34} color="#ef4444" />
+          </div>
+          <h2 className="loading-title">Locker Not Found</h2>
+          <p className="error-desc">
+            Cloud locker <strong>#{code}</strong> does not exist, or this 24-hour temporary space has expired and self-destructed.
+          </p>
+          <div className="error-actions">
+            <button className="btn btn-secondary" onClick={onGoHome || (() => window.location.href = '/')}>
+              <ArrowLeft size={16} />
+              <span>Back to Home</span>
+            </button>
+            <button className="btn btn-primary" onClick={onGoHome || (() => window.location.href = '/')}>
+              <Plus size={16} />
+              <span>Create New Drop</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

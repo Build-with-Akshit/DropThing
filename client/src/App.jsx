@@ -125,6 +125,7 @@ export function App() {
           <LockerView
             code={activeCode}
             onNotify={notify}
+            onGoHome={handleGoHome}
           />
         )}
 
