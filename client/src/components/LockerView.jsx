@@ -429,17 +429,31 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
             className="action-btn action-anyfile"
             onClick={() => anyFileInputRef.current?.click()}
             disabled={uploading}
+            style={uploading ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
           >
             <div className="action-icon-circle anyfile-circle">
               <Package size={20} />
             </div>
             <div className="action-btn-texts">
-              <span className="action-btn-title">+ Any File</span>
+              <span className="action-btn-title">{uploading ? 'Uploading...' : '+ Any File'}</span>
               <span className="action-btn-desc">.pdf, .docx, .xlsx, .zip, .apk, .exe...</span>
             </div>
           </button>
         </div>
       </div>
+
+      {/* Live Upload Progress Banner */}
+      {uploading && (
+        <div className="upload-progress-toast">
+          <div className="upload-progress-spinner">
+            <RefreshCw size={20} className="animate-spin" />
+          </div>
+          <div className="upload-progress-info">
+            <strong>Uploading to Cloud Storage...</strong>
+            <span>Encrypting and streaming files to your cloud locker. Please wait a moment.</span>
+          </div>
+        </div>
+      )}
 
       {/* DRIVE EXPLORER AREA */}
       <div className="explorer-container">
