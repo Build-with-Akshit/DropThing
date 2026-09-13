@@ -5,6 +5,7 @@ import { LockerView } from './components/LockerView';
 import { Dashboard } from './components/Dashboard';
 import { AuthModal } from './components/AuthModal';
 import { CreateFolderModal } from './components/CreateFolderModal';
+import { ProfileModal } from './components/ProfileModal';
 import { Toast } from './components/Toast';
 import { api } from './services/api';
 
@@ -17,6 +18,7 @@ export function App() {
   // Modals
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isNewFolderOpen, setIsNewFolderOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('droppin_theme') || 'light';
@@ -154,6 +156,7 @@ export function App() {
         onOpenNewFolder={() => setIsNewFolderOpen(true)}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onOpenProfile={() => setIsProfileOpen(true)}
       />
 
       {/* Main View Switching */}
@@ -181,6 +184,7 @@ export function App() {
             user={user}
             onOpenFolder={handleOpenLocker}
             onOpenNewFolder={() => setIsNewFolderOpen(true)}
+            onOpenProfile={() => setIsProfileOpen(true)}
             onNotify={notify}
           />
         )}
@@ -214,6 +218,16 @@ export function App() {
         onClose={() => setIsNewFolderOpen(false)}
         onSuccess={(folder) => {
           handleOpenLocker(folder.code);
+        }}
+        onNotify={notify}
+      />
+
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        user={user}
+        onUpdateUser={(updatedUser) => {
+          setUser((prev) => ({ ...prev, ...updatedUser }));
         }}
         onNotify={notify}
       />

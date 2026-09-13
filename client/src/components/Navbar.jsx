@@ -1,5 +1,5 @@
 import React from 'react';
-import { HardDrive, User, LogOut, ArrowLeft, Plus, LogIn, Sun, Moon } from 'lucide-react';
+import { HardDrive, User, LogOut, ArrowLeft, Plus, LogIn, Sun, Moon, Settings } from 'lucide-react';
 
 export const Navbar = ({ 
   user, 
@@ -10,7 +10,8 @@ export const Navbar = ({
   onLogout,
   onOpenNewFolder,
   theme,
-  onToggleTheme
+  onToggleTheme,
+  onOpenProfile
 }) => {
   return (
     <header className="navbar">
@@ -65,19 +66,17 @@ export const Navbar = ({
               <span>New Folder</span>
             </button>
 
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              padding: '4px 10px',
-              borderRadius: '9999px',
-              background: 'var(--bg-card-hover)',
-              border: '1px solid var(--border-subtle)',
-              fontSize: '0.85rem'
-            }}>
-              <User size={14} color="var(--accent-primary)" />
-              <span style={{ fontWeight: 600 }}>{user.name}</span>
-            </div>
+            <button
+              className="user-profile-btn"
+              onClick={onOpenProfile}
+              title="Account Settings & Profile"
+            >
+              <div className="user-profile-avatar-mini">
+                <User size={13} color="var(--accent-primary)" />
+              </div>
+              <span className="user-profile-name">{user.name}</span>
+              <Settings size={13} className="user-profile-gear" />
+            </button>
 
             <button
               className="btn btn-secondary btn-sm"

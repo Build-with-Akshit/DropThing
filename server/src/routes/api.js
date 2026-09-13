@@ -12,6 +12,8 @@ const { checkPinRateLimit } = require('../middleware/rateLimiter');
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 router.get('/auth/me', requireAuth, authController.getMe);
+router.put('/auth/profile', requireAuth, authController.updateProfile);
+router.put('/auth/password', requireAuth, authController.changePassword);
 
 // ==================== FOLDER ROUTES ====================
 // Guest mode (24h auto-delete)

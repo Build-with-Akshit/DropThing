@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Folder, Plus, Copy, Check, ArrowRight, Trash2, HardDrive, ShieldCheck } from 'lucide-react';
+import { Folder, Plus, Copy, Check, ArrowRight, Trash2, HardDrive, ShieldCheck, Settings } from 'lucide-react';
 import { api } from '../services/api';
 
-export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onNotify }) => {
+export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, onNotify }) => {
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState(null);
@@ -63,17 +63,24 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onNotify }) => 
       <div className="dashboard-header">
         <div>
           <h1 className="dashboard-title">
-            {user?.username ? `${user.username}'s Cloud Drive` : 'My Cloud Drive'}
+            {user?.name ? `${user.name}'s Cloud Drive` : 'My Cloud Drive'}
           </h1>
           <p className="dashboard-subtitle">
             Permanent cloud storage spaces. Access any of these on public/library PCs using their short PIN.
           </p>
         </div>
 
-        <button className="btn btn-primary" onClick={onOpenNewFolder}>
-          <Plus size={16} />
-          Create New Folder
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button className="btn btn-secondary" onClick={onOpenProfile} title="Account Settings & Security">
+            <Settings size={15} />
+            <span>Account Settings</span>
+          </button>
+
+          <button className="btn btn-primary" onClick={onOpenNewFolder}>
+            <Plus size={16} />
+            Create New Folder
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}

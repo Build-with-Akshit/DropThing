@@ -178,5 +178,54 @@ export const api = {
     } catch {
       return null;
     }
+  },
+
+  async getMe() {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      headers: { ...getAuthHeaders() }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to fetch account info');
+    if (data.user) {
+      localStorage.setItem('dropthing_user', JSON.stringify(data.user));
+      localStorage.setItem('droppin_user', JSON.stringify(data.user));
+    }
+    return data.user;
+  },
+
+  async updateProfile(name) {
+    const res = await fetch(`${API_BASE}/auth/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to update profile');
+    if (data.token) {
+      localStorage.setItem('dropthing_token', data.token);
+      localStorage.setItem('droppin_token', data.token);
+    }
+    if (data.user) {
+      localStorage.setItem('dropthing_user', JSON.stringify(data.user));
+      localStorage.setItem('droppin_user', JSON.stringify(data.user));
+    }
+    return data;
+  },
+
+  async changePassword(currentPassword, newPassword) {
+    const res = await fetch(`${API_BASE}/auth/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to change password');
+    return data;
   }
 };
