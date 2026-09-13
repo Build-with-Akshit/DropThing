@@ -42,8 +42,12 @@ export function App() {
     if (urlCode) {
       setActiveCode(urlCode.toUpperCase());
       setView('locker');
+      window.history.replaceState({ view: 'locker', code: urlCode.toUpperCase() }, '', window.location.href);
     } else if (window.location.hash === '#drive' && storedUser) {
       setView('dashboard');
+      window.history.replaceState({ view: 'dashboard' }, '', window.location.href);
+    } else {
+      window.history.replaceState({ view: 'home' }, '', window.location.href);
     }
 
     // Handle Browser Back / Forward buttons & Alt + Left / Alt + Right
@@ -80,37 +84,60 @@ export function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Open a Locker by Code
+  // Open a Locker by Code (prevents pushing duplicate history if already open)
   const handleOpenLocker = (code) => {
-    setActiveCode(code.toUpperCase());
+    const formattedCode = code.toUpperCase();
+    if (view === 'locker' && activeCode === formattedCode) {
+      return;
+    }
+    setActiveCode(formattedCode);
     setView('locker');
-    const newUrl = `${window.location.pathname}?code=${code.toUpperCase()}`;
-    window.history.pushState({ view: 'locker', code: code.toUpperCase() }, '', newUrl);
+    const newUrl = `${window.location.pathname}?code=${formattedCode}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
+    if (currentUrl !== newUrl) {
+      window.history.pushState({ view: 'locker', code: formattedCode }, '', newUrl);
+    }
   };
 
-  // Return to Home / Leave Locker
+  // Return to Home / Leave Locker (no-op if already on Home, preventing duplicate history entries)
   const handleGoHome = () => {
+    const isAlreadyHome = view === 'home' && !window.location.search && !window.location.hash;
+    if (isAlreadyHome) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     setActiveCode(null);
     setView('home');
-    window.history.pushState({ view: 'home' }, '', window.location.pathname);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (currentUrl !== window.location.pathname) {
+      window.history.pushState({ view: 'home' }, '', window.location.pathname);
+    }
   };
 
-  // Open Dashboard (My Drive)
+  // Open Dashboard (My Drive) (prevents duplicate history entries if already on Dashboard)
   const handleOpenDashboard = () => {
     if (!user) {
       setIsAuthOpen(true);
       return;
     }
+    if (view === 'dashboard' && window.location.hash === '#drive') {
+      return;
+    }
     setActiveCode(null);
     setView('dashboard');
-    window.history.pushState({ view: 'dashboard' }, '', `${window.location.pathname}#drive`);
+    const targetUrl = `${window.location.pathname}#drive`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (currentUrl !== targetUrl) {
+      window.history.pushState({ view: 'dashboard' }, '', targetUrl);
+    }
   };
 
   // Handle Logout
   const handleLogout = () => {
     api.logout();
     setUser(null);
-    setView('home');
+    handleGoHome();
     notify('Logged out successfully.', 'info');
   };
 
