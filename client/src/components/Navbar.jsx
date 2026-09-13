@@ -72,7 +72,7 @@ export const Navbar = ({
             </button>
 
             <button
-              className="user-profile-btn"
+              className={`user-profile-btn ${currentView === 'dashboard' ? 'user-profile-btn-dashboard' : ''}`}
               onClick={onOpenProfile}
               title="Account Settings & Profile"
             >
