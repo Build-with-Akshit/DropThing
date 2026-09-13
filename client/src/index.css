@@ -809,46 +809,37 @@ button, input, select, textarea, a {
   .nav-btn-text-mobile {
     display: inline !important;
   }
-  .user-profile-name {
-    display: none !important;
-  }
   .user-profile-btn {
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    gap: 0;
-    border-radius: 50%;
-    display: inline-flex;
+    width: auto !important;
+    height: 34px !important;
+    border-radius: 9999px !important;
+    padding: 3px 8px 3px 5px !important;
+    gap: 5px !important;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    max-width: 130px;
   }
   .user-profile-avatar-mini {
     width: 24px;
     height: 24px;
+    flex-shrink: 0;
   }
-  .user-profile-gear {
-    display: none !important;
-  }
-  .user-profile-btn-dashboard {
-    width: auto !important;
-    height: 34px !important;
-    border-radius: 9999px !important;
-    padding: 4px 10px 4px 5px !important;
-    gap: 6px !important;
-    display: inline-flex !important;
-  }
-  .user-profile-btn-dashboard .user-profile-name {
+  .user-profile-name {
     display: inline !important;
-    max-width: 80px;
-    font-size: 0.8rem;
+    max-width: 65px;
+    font-size: 0.78rem;
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .user-profile-btn-dashboard .user-profile-gear {
+  .user-profile-gear {
     display: inline !important;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
   }
   .nav-logout-btn {
     padding: 6px !important;
@@ -912,10 +903,20 @@ button, input, select, textarea, a {
 
 @media (max-width: 380px) {
   .navbar {
-    padding: 0 0.5rem;
+    padding: 0 0.45rem;
   }
   .nav-actions, .user-nav-group {
     gap: 0.25rem;
+  }
+  .user-profile-name {
+    max-width: 50px;
+  }
+  .user-profile-btn {
+    padding: 3px 6px 3px 4px !important;
+    gap: 4px !important;
+  }
+  .brand {
+    gap: 0.35rem;
   }
 }
 
