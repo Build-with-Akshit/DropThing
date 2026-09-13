@@ -1,0 +1,53 @@
+# ==============================================================
+# DropThing Root .gitignore
+# ==============================================================
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment Variables & Secrets (CRITICAL)
+.env
+.env.local
+.env.*.local
+*.env
+server/.env
+client/.env
+
+# Local Storage Uploads & Temporary Files
+server/uploads/*
+!server/uploads/.gitkeep
+uploads/
+
+# Local Database Files & SQLite
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+server/data/*.sqlite
+*.sqlite
+*.db
+*.db-wal
+*.db-shm
+
+# Build Outputs
+dist/
+client/dist/
+dist-ssr/
+build/
+
+# Logs & Debugging
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & OS metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

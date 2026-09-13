@@ -1,0 +1,10 @@
+{
+  "name": "droppin-root",
+  "version": "1.0.0",
+  "description": "DropPin - Instant PIN-Based Cloud File & Text Bridge",
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev": "node -e \"const { spawn } = require('child_process'); const s = spawn('npm', ['--prefix', 'server', 'run', 'dev'], { shell: true, stdio: 'inherit' }); const c = spawn('npm', ['--prefix', 'client', 'run', 'dev'], { shell: true, stdio: 'inherit' }); process.on('SIGINT', () => { s.kill(); c.kill(); process.exit(); });\""
+  }
+}

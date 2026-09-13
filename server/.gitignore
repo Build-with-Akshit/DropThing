@@ -1,0 +1,23 @@
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencies
+node_modules/
+
+# Local Storage Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Database Files
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/*.sqlite
+
+# Logs
+logs/
+*.log
+npm-debug.log*
