@@ -8,7 +8,6 @@ import {
   Trash2, 
   HardDrive, 
   ShieldCheck, 
-  Settings, 
   Clock, 
   Zap 
 } from 'lucide-react';
@@ -132,11 +131,6 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
         </div>
 
         <div className="dashboard-header-actions">
-          <button className="btn btn-secondary" onClick={onOpenProfile} title="Account Settings & Security">
-            <Settings size={15} />
-            <span>Account Settings</span>
-          </button>
-
           <button 
             className="btn btn-secondary" 
             onClick={handleCreateQuickDrop} 
