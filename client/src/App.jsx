@@ -32,7 +32,7 @@ export function App() {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  // Initialize User & URL Query Params (?code=XXXX)
+  // Initialize User, URL Query Params, & Browser Back/Forward navigation (Alt + Left)
   useEffect(() => {
     const storedUser = api.getCurrentUser();
     if (storedUser) setUser(storedUser);
@@ -42,7 +42,28 @@ export function App() {
     if (urlCode) {
       setActiveCode(urlCode.toUpperCase());
       setView('locker');
+    } else if (window.location.hash === '#drive' && storedUser) {
+      setView('dashboard');
     }
+
+    // Handle Browser Back / Forward buttons & Alt + Left / Alt + Right
+    const handlePopState = (e) => {
+      const currentParams = new URLSearchParams(window.location.search);
+      const currentCode = currentParams.get('code');
+      if (currentCode) {
+        setActiveCode(currentCode.toUpperCase());
+        setView('locker');
+      } else if (e.state?.view === 'dashboard' || window.location.hash === '#drive') {
+        setActiveCode(null);
+        setView('dashboard');
+      } else {
+        setActiveCode(null);
+        setView('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   // Toast Notification System
@@ -63,16 +84,15 @@ export function App() {
   const handleOpenLocker = (code) => {
     setActiveCode(code.toUpperCase());
     setView('locker');
-    // Update URL query string without reloading page
     const newUrl = `${window.location.pathname}?code=${code.toUpperCase()}`;
-    window.history.pushState({ path: newUrl }, '', newUrl);
+    window.history.pushState({ view: 'locker', code: code.toUpperCase() }, '', newUrl);
   };
 
   // Return to Home / Leave Locker
   const handleGoHome = () => {
     setActiveCode(null);
     setView('home');
-    window.history.pushState({}, '', window.location.pathname);
+    window.history.pushState({ view: 'home' }, '', window.location.pathname);
   };
 
   // Open Dashboard (My Drive)
@@ -83,7 +103,7 @@ export function App() {
     }
     setActiveCode(null);
     setView('dashboard');
-    window.history.pushState({}, '', window.location.pathname);
+    window.history.pushState({ view: 'dashboard' }, '', `${window.location.pathname}#drive`);
   };
 
   // Handle Logout
