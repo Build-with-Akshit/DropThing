@@ -74,20 +74,50 @@ export const api = {
     return data;
   },
 
-  async uploadFiles({ folderId, files }) {
-    const formData = new FormData();
-    formData.append('folderId', folderId);
-    for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i]);
-    }
+  uploadFiles({ folderId, files, onProgress }) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('folderId', folderId);
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
 
-    const res = await fetch(`${API_BASE}/items/upload`, {
-      method: 'POST',
-      body: formData
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${API_BASE}/items/upload`);
+
+      const headers = getAuthHeaders();
+      for (const key in headers) {
+        xhr.setRequestHeader(key, headers[key]);
+      }
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            onProgress(percent);
+          }
+        });
+      }
+
+      xhr.onload = () => {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(data);
+          } else {
+            reject(new Error(data.error || 'Failed to upload files'));
+          }
+        } catch (err) {
+          reject(new Error('Invalid response from server'));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error('Network connection error during upload.'));
+      };
+
+      xhr.send(formData);
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to upload files');
-    return data;
   },
 
   getDownloadUrl(itemId) {

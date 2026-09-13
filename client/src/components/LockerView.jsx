@@ -29,6 +29,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [copiedPin, setCopiedPin] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -134,10 +135,12 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
 
     try {
       setUploading(true);
+      setUploadProgress(0);
       onNotify(`Uploading ${files.length} file(s)...`, 'info');
       const data = await api.uploadFiles({
         folderId: folder.id,
-        files
+        files,
+        onProgress: (percent) => setUploadProgress(percent)
       });
       setItems([...data.items, ...items]);
       onNotify(`${data.items.length} file(s) uploaded to cloud!`, 'success');
@@ -145,6 +148,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
       onNotify(err.message, 'error');
     } finally {
       setUploading(false);
+      setUploadProgress(0);
       e.target.value = ''; // Reset input
     }
   };
@@ -168,10 +172,12 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
 
     try {
       setUploading(true);
+      setUploadProgress(0);
       onNotify(`Uploading ${droppedFiles.length} dropped file(s)...`, 'info');
       const data = await api.uploadFiles({
         folderId: folder.id,
-        files: droppedFiles
+        files: droppedFiles,
+        onProgress: (percent) => setUploadProgress(percent)
       });
       setItems([...data.items, ...items]);
       onNotify(`${data.items.length} file(s) uploaded to cloud!`, 'success');
@@ -179,6 +185,7 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
       onNotify(err.message, 'error');
     } finally {
       setUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -435,22 +442,45 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
               <Package size={20} />
             </div>
             <div className="action-btn-texts">
-              <span className="action-btn-title">{uploading ? 'Uploading...' : '+ Any File'}</span>
+              <span className="action-btn-title">{uploading ? `Uploading ${uploadProgress}%` : '+ Any File'}</span>
               <span className="action-btn-desc">.pdf, .docx, .xlsx, .zip, .apk, .exe...</span>
             </div>
           </button>
         </div>
       </div>
 
-      {/* Live Upload Progress Banner */}
+      {/* Live Upload Progress Banner with Real Percentage */}
       {uploading && (
         <div className="upload-progress-toast">
           <div className="upload-progress-spinner">
-            <RefreshCw size={20} className="animate-spin" />
+            {uploadProgress === 100 ? (
+              <RefreshCw size={20} className="animate-spin" color="var(--accent-cyan)" />
+            ) : (
+              <span className="upload-percent-text">{uploadProgress}%</span>
+            )}
           </div>
-          <div className="upload-progress-info">
-            <strong>Uploading to Cloud Storage...</strong>
-            <span>Encrypting and streaming files to your cloud locker. Please wait a moment.</span>
+          <div className="upload-progress-info" style={{ flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong>
+                {uploadProgress < 100
+                  ? `Uploading to Cloud Storage (${uploadProgress}%)`
+                  : 'Processing & Encrypting in Cloud...'}
+              </strong>
+              <span className="upload-percent-badge">{uploadProgress}%</span>
+            </div>
+
+            <div className="upload-real-progress-track">
+              <div 
+                className="upload-real-progress-bar"
+                style={{ width: `${Math.max(uploadProgress, 4)}%` }}
+              />
+            </div>
+
+            <span className="upload-sub-text">
+              {uploadProgress < 100
+                ? 'Streaming chunks over secure SSL channel to Supabase S3...'
+                : 'Finalizing cloud object sync and updating locker...'}
+            </span>
           </div>
         </div>
       )}

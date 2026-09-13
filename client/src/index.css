@@ -962,7 +962,7 @@ body {
 .upload-progress-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .upload-progress-info strong {
@@ -975,5 +975,42 @@ body {
   font-size: 0.8rem;
   color: var(--text-secondary);
 }
+
+.upload-percent-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.upload-percent-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.12);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.upload-real-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-card-hover);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 4px 0 2px;
+  border: 1px solid var(--border-subtle);
+}
+
+.upload-real-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+  border-radius: 9999px;
+  transition: width 0.15s ease-out;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
 
 
