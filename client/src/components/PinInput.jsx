@@ -97,6 +97,9 @@ export const PinInput = ({ onComplete, loading }) => {
                 disabled={loading}
                 className="pin-box"
                 autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck="false"
               />
             ))}
           </div>
@@ -237,13 +240,26 @@ export const PinInput = ({ onComplete, loading }) => {
           flex: 1;
         }
         @media (max-width: 480px) {
-          .pin-box {
-            width: 54px;
-            height: 64px;
-            font-size: 1.75rem;
-          }
           .pin-slots {
-            gap: 0.6rem;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+          }
+          .pin-box {
+            width: clamp(48px, 15vw, 60px);
+            height: clamp(58px, 17vw, 70px);
+            font-size: clamp(1.4rem, 5vw, 1.85rem);
+            border-radius: 12px;
+          }
+          .pin-submit-btn {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.95rem;
+          }
+          .custom-code-toggle {
+            font-size: 0.8rem;
+          }
+          .custom-form-btns {
+            flex-direction: column;
+            gap: 0.5rem;
           }
         }
       `}</style>

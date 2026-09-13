@@ -21,8 +21,9 @@ export const QrModal = ({ code, isOpen, onClose, onCopyLink }) => {
 
   useEffect(() => {
     if (isOpen && canvasRef.current) {
+      const qrWidth = Math.min(240, window.innerWidth - 80);
       QRCode.toCanvas(canvasRef.current, shareUrl, {
-        width: 240,
+        width: qrWidth,
         margin: 2,
         color: {
           dark: '#0f172a',
@@ -56,9 +57,10 @@ export const QrModal = ({ code, isOpen, onClose, onCopyLink }) => {
             padding: '12px',
             borderRadius: '16px',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-            display: 'inline-block'
+            display: 'inline-block',
+            maxWidth: '100%'
           }}>
-            <canvas ref={canvasRef} style={{ display: 'block' }}></canvas>
+            <canvas ref={canvasRef} style={{ display: 'block', maxWidth: '100%', height: 'auto' }}></canvas>
           </div>
 
           <div style={{

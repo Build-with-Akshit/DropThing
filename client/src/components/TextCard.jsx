@@ -321,6 +321,30 @@ export const TextCard = ({ item, onDelete, onNotify }) => {
           background: rgba(2, 132, 199, 0.1);
           text-decoration: underline;
         }
+        @media (max-width: 600px) {
+          .card-top {
+            padding: 0.85rem 1rem 0.5rem;
+          }
+          .text-badge-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+          }
+          .card-title {
+            font-size: 0.88rem;
+          }
+          .card-content-area {
+            padding: 0.5rem 1rem 0.75rem;
+          }
+          .text-body-preview-container {
+            padding: 0.65rem 0.85rem;
+            max-height: 120px;
+          }
+          .card-bottom {
+            padding: 0.65rem 1rem;
+            font-size: 0.75rem;
+          }
+        }
       `}</style>
     </div>
   );

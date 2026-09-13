@@ -1000,16 +1000,99 @@ export const LockerView = ({ code, onNotify, onGoHome }) => {
             grid-template-columns: repeat(2, 1fr);
           }
         }
-        @media (max-width: 600px) {
-          .action-buttons-grid {
-            grid-template-columns: 1fr;
+        @media (max-width: 640px) {
+          .locker-page {
+            margin: 0.85rem auto 2rem;
+            padding: 0 0.85rem;
           }
           .locker-banner {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            padding: 1.15rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1.15rem;
+            gap: 1rem;
+          }
+          .locker-title {
+            font-size: 1.35rem;
+            margin-bottom: 0.35rem;
+            word-break: break-word;
+          }
+          .banner-right {
+            width: 100%;
+            display: flex;
+            gap: 0.5rem;
+          }
+          .banner-right .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 0.5rem 0.65rem;
+            font-size: 0.8rem;
+          }
+          .banner-right .btn:last-child {
+            flex: 0 0 38px;
+            padding: 0;
+          }
+          /* Modern 2x2 Grid for Mobile */
+          .action-buttons-bar {
+            margin-bottom: 1.25rem;
+          }
+          .action-buttons-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.55rem;
+          }
+          .action-btn {
+            padding: 0.75rem 0.65rem;
+            border-radius: 14px;
+            gap: 0.55rem;
+          }
+          .action-icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+          }
+          .action-btn-title {
+            font-size: 0.82rem;
+          }
+          .action-btn-desc {
+            font-size: 0.68rem;
+            line-height: 1.2;
+          }
+          /* Drive Explorer Mobile */
+          .explorer-container {
+            padding: 1rem 0.85rem;
+            border-radius: 16px;
+          }
+          .explorer-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+          }
+          .explorer-tabs {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0.35rem;
+            padding-bottom: 2px;
+          }
+          .explorer-tabs::-webkit-scrollbar {
+            display: none;
+          }
+          .tab-btn {
+            padding: 5px 11px;
+            font-size: 0.78rem;
+          }
+          .explorer-search {
+            width: 100%;
+            min-width: 0;
+            padding: 7px 12px;
           }
           .items-grid {
             grid-template-columns: 1fr;
+            gap: 0.85rem;
           }
         }
       `}</style>

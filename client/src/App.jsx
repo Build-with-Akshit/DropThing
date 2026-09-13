@@ -191,14 +191,7 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer style={{
-        padding: '1.5rem',
-        borderTop: '1px solid var(--border-subtle)',
-        textAlign: 'center',
-        fontSize: '0.85rem',
-        color: 'var(--text-muted)',
-        background: 'rgba(10, 13, 20, 0.9)'
-      }}>
+      <footer className="app-footer">
         <p>DropThing &copy; 2026 — Secure, Zero-Login Instant Cloud File & Text Bridge</p>
       </footer>
 

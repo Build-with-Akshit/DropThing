@@ -131,7 +131,7 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="dashboard-header-actions">
           <button className="btn btn-secondary" onClick={onOpenProfile} title="Account Settings & Security">
             <Settings size={15} />
             <span>Account Settings</span>
@@ -539,6 +539,12 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           align-items: center;
           justify-content: space-between;
         }
+        .dashboard-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
         .folder-open-link {
           display: flex;
           align-items: center;
@@ -546,6 +552,89 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           font-size: 0.85rem;
           font-weight: 600;
           color: var(--accent-cyan);
+        }
+        @media (max-width: 640px) {
+          .dashboard-container {
+            margin: 1rem auto 2rem;
+            padding: 0 0.85rem;
+          }
+          .dashboard-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+          }
+          .dashboard-title {
+            font-size: 1.45rem;
+          }
+          .dashboard-subtitle {
+            font-size: 0.85rem;
+            line-height: 1.45;
+          }
+          .dashboard-header-actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          .dashboard-header-actions .btn {
+            width: 100%;
+            justify-content: center;
+          }
+          /* 3 Compact Stat Tiles */
+          .stats-row {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.45rem;
+            margin-bottom: 1.25rem;
+          }
+          .stat-card {
+            padding: 0.75rem 0.35rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 0.35rem;
+            border-radius: 12px;
+          }
+          .stat-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+          }
+          .stat-num {
+            font-size: 1.05rem;
+          }
+          .stat-label {
+            font-size: 0.68rem;
+            line-height: 1.2;
+          }
+          /* Horizontal Scrollable Tabs */
+          .dashboard-tabs-bar {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0.35rem;
+            padding-bottom: 0.4rem;
+            margin-bottom: 1rem;
+          }
+          .dashboard-tabs-bar::-webkit-scrollbar {
+            display: none;
+          }
+          .dash-tab-btn {
+            white-space: nowrap;
+            font-size: 0.78rem;
+            padding: 5px 11px;
+          }
+          .folder-grid {
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
+          }
+          .folder-card {
+            padding: 1rem;
+            border-radius: 14px;
+          }
+          .empty-dashboard-card {
+            padding: 2.5rem 1rem;
+          }
         }
       `}</style>
     </div>

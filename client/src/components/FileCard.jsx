@@ -784,6 +784,54 @@ export const FileCard = ({ item, onDelete, onNotify }) => {
           border: none;
           background: #fff;
         }
+        @media (max-width: 600px) {
+          .card-top {
+            padding: 0.85rem 1rem 0.65rem;
+          }
+          .file-type-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+          }
+          .card-title {
+            font-size: 0.88rem;
+          }
+          .btn-icon-action {
+            padding: 5px 9px;
+            font-size: 0.75rem;
+          }
+          .image-thumbnail-container, .video-thumbnail-container {
+            max-height: 180px;
+          }
+          .card-bottom {
+            padding: 0.65rem 1rem;
+            font-size: 0.75rem;
+          }
+          .lightbox-container {
+            max-width: 95vw;
+            max-height: 88dvh;
+            border-radius: 16px;
+          }
+          .lightbox-header {
+            padding: 0.75rem 1rem;
+          }
+          .lightbox-title {
+            font-size: 0.9rem;
+          }
+          .lightbox-body {
+            padding: 0.5rem;
+            min-height: 180px;
+          }
+          .lightbox-body-doc {
+            height: 60dvh;
+          }
+          .lightbox-doc-container {
+            padding: 0.85rem;
+          }
+          .lightbox-body-pdf {
+            height: 70dvh;
+          }
+        }
       `}</style>
     </>
   );

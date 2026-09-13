@@ -265,14 +265,62 @@ export const HomeHero = ({ onOpenLocker, onOpenAuth, user, onOpenNewFolder, onNo
           width: fit-content;
         }
         @media (max-width: 768px) {
+          .home-hero-wrapper {
+            padding: 2rem 1.25rem 3.5rem;
+            min-height: calc(100dvh - 60px);
+          }
           .hero-heading {
-            font-size: 2.25rem;
+            font-size: 2.15rem;
+          }
+          .hero-subtext {
+            font-size: 0.98rem;
+            margin-bottom: 1.75rem;
           }
           .action-cards-row {
             grid-template-columns: 1fr;
+            gap: 1rem;
           }
           .pin-card-box {
             padding: 1.75rem 1.25rem;
+            margin-bottom: 2rem;
+          }
+        }
+        @media (max-width: 480px) {
+          .home-hero-wrapper {
+            padding: 1.25rem 0.85rem 2.5rem;
+          }
+          .hero-heading {
+            font-size: 1.65rem;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+          }
+          .hero-subtext {
+            font-size: 0.875rem;
+            line-height: 1.48;
+            margin-bottom: 1.35rem;
+          }
+          .pin-card-box {
+            padding: 1.25rem 0.75rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+          }
+          .pin-card-label {
+            font-size: 0.72rem;
+            margin-bottom: 0.85rem;
+          }
+          .dual-card {
+            padding: 1.15rem 1rem;
+            border-radius: 16px;
+          }
+          .dual-card h3 {
+            font-size: 1.05rem;
+          }
+          .dual-card p {
+            font-size: 0.8rem;
+          }
+          .dual-card button {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>
