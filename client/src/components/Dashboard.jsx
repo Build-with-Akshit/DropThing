@@ -145,12 +145,12 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
             style={{ border: '1px solid rgba(245, 158, 11, 0.4)', color: 'var(--text-primary)' }}
           >
             <Clock size={15} color="var(--accent-amber)" />
-            <span>{creatingQuickDrop ? 'Creating...' : '+ New 24h Drop'}</span>
+            <span>{creatingQuickDrop ? 'Creating...' : 'New 24h Drop'}</span>
           </button>
 
           <button className="btn btn-primary" onClick={onOpenNewFolder}>
             <Plus size={16} />
-            <span>+ New Permanent Folder</span>
+            <span>New Permanent Folder</span>
           </button>
         </div>
       </div>
@@ -199,7 +199,8 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           className={`dash-tab-btn ${filterTab === 'all' ? 'active' : ''}`}
           onClick={() => setFilterTab('all')}
         >
-          <span>All Spaces</span>
+          <span className="dash-tab-label-desktop">All Spaces</span>
+          <span className="dash-tab-label-mobile">All</span>
           <span className="dash-tab-count">{folders.length}</span>
         </button>
 
@@ -217,7 +218,8 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           onClick={() => setFilterTab('temporary')}
         >
           <Clock size={14} />
-          <span>24h Quick Drops</span>
+          <span className="dash-tab-label-desktop">24h Quick Drops</span>
+          <span className="dash-tab-label-mobile">24h Drops</span>
           <span className="dash-tab-count">{temporaryFolders.length}</span>
         </button>
       </div>
@@ -429,6 +431,12 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
         [data-theme="light"] .dash-tab-btn:not(.active) .dash-tab-count {
           background: rgba(0, 0, 0, 0.07);
         }
+        .dash-tab-label-mobile {
+          display: none;
+        }
+        .dash-tab-label-desktop {
+          display: inline;
+        }
 
         .empty-dashboard-card {
           background: var(--bg-card);
@@ -619,10 +627,17 @@ export const Dashboard = ({ user, onOpenFolder, onOpenNewFolder, onOpenProfile, 
           .dashboard-tabs-bar::-webkit-scrollbar {
             display: none;
           }
+          .dash-tab-label-mobile {
+            display: inline;
+          }
+          .dash-tab-label-desktop {
+            display: none;
+          }
           .dash-tab-btn {
             white-space: nowrap;
             font-size: 0.78rem;
-            padding: 5px 11px;
+            padding: 5px 10px;
+            flex-shrink: 0;
           }
           .folder-grid {
             grid-template-columns: 1fr;

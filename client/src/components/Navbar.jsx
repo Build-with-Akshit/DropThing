@@ -4,6 +4,7 @@ import { HardDrive, User, LogOut, ArrowLeft, Plus, LogIn, Sun, Moon, Settings } 
 export const Navbar = ({ 
   user, 
   currentFolder, 
+  currentView,
   onGoHome, 
   onOpenAuth, 
   onOpenDashboard, 
@@ -51,24 +52,25 @@ export const Navbar = ({
 
         {user ? (
           <div className="user-nav-group">
-            <button
-              className={`btn btn-secondary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
-              onClick={onOpenDashboard}
-              title="My Drive Spaces"
-            >
-              <HardDrive size={14} color="var(--accent-cyan)" />
-              <span className="nav-btn-text">My Drive</span>
-              <span className="nav-btn-text-mobile">Drive</span>
-            </button>
+            {currentView !== 'dashboard' && (
+              <button
+                className={`btn btn-secondary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
+                onClick={onOpenDashboard}
+                title="My Drive Spaces"
+              >
+                <HardDrive size={14} color="var(--accent-cyan)" />
+                <span className="nav-btn-text">My Drive</span>
+                <span className="nav-btn-text-mobile">Drive</span>
+              </button>
+            )}
 
             <button
-              className={`btn btn-primary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
+              className="btn btn-primary btn-sm nav-action-btn desktop-only"
               onClick={onOpenNewFolder}
               title="Create New Folder"
             >
               <Plus size={14} />
               <span className="nav-btn-text">New Folder</span>
-              <span className="nav-btn-text-mobile">New</span>
             </button>
 
             <button
@@ -84,7 +86,7 @@ export const Navbar = ({
             </button>
 
             <button
-              className={`btn btn-secondary btn-sm nav-logout-btn ${currentFolder ? 'desktop-only' : ''}`}
+              className="btn btn-secondary btn-sm nav-logout-btn desktop-only"
               onClick={onLogout}
               title="Logout"
             >

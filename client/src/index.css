@@ -766,21 +766,25 @@ button, input, select, textarea, a {
     display: none !important;
   }
   .nav-actions {
-    gap: 0.4rem;
+    gap: 0.35rem;
+    flex-shrink: 0;
   }
   .user-nav-group {
-    gap: 0.4rem;
+    gap: 0.35rem;
+    flex-shrink: 0;
   }
   .theme-toggle-btn {
     width: 34px;
     height: 34px;
     border-radius: 9px;
+    flex-shrink: 0;
   }
   .btn-sm {
     padding: 0.42rem 0.65rem;
     font-size: 0.78rem;
     border-radius: 8px;
     gap: 0.35rem;
+    flex-shrink: 0;
   }
   .nav-btn-text {
     display: none !important;
@@ -792,8 +796,19 @@ button, input, select, textarea, a {
     display: none !important;
   }
   .user-profile-btn {
-    padding: 4px 6px;
-    gap: 4px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .user-profile-avatar-mini {
+    width: 24px;
+    height: 24px;
   }
   .user-profile-gear {
     display: none !important;
@@ -858,6 +873,18 @@ button, input, select, textarea, a {
   }
   .navbar {
     padding: 0 0.65rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-name {
+    font-size: 0.92rem;
+  }
+  .navbar {
+    padding: 0 0.5rem;
+  }
+  .nav-actions, .user-nav-group {
+    gap: 0.25rem;
   }
 }
 

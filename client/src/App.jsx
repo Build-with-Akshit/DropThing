@@ -149,6 +149,7 @@ export function App() {
       <Navbar
         user={user}
         currentFolder={view === 'locker' ? activeCode : null}
+        currentView={view}
         onGoHome={handleGoHome}
         onOpenAuth={() => setIsAuthOpen(true)}
         onOpenDashboard={handleOpenDashboard}
@@ -222,6 +223,7 @@ export function App() {
         onUpdateUser={(updatedUser) => {
           setUser((prev) => ({ ...prev, ...updatedUser }));
         }}
+        onLogout={handleLogout}
         onNotify={notify}
       />
 

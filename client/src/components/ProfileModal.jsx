@@ -13,11 +13,12 @@ import {
   Eye, 
   EyeOff, 
   Save, 
-  Check
+  Check,
+  LogOut
 } from 'lucide-react';
 import { api } from '../services/api';
 
-export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) => {
+export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify, onLogout }) => {
   const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'security'
   
   // Profile state
@@ -525,7 +526,21 @@ export const ProfileModal = ({ isOpen, onClose, user, onUpdateUser, onNotify }) 
           )}
         </div>
 
-        <div className="modal-footer" style={{ justifyContent: 'flex-end' }}>
+        <div className="modal-footer" style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+          {onLogout ? (
+            <button 
+              type="button" 
+              className="btn btn-danger btn-sm"
+              onClick={() => {
+                onClose();
+                onLogout();
+              }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            >
+              <LogOut size={14} />
+              <span>Sign Out</span>
+            </button>
+          ) : <div />}
           <button type="button" className="btn btn-secondary btn-sm" onClick={onClose}>
             Close
           </button>
