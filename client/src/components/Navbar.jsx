@@ -1,5 +1,5 @@
 import React from 'react';
-import { HardDrive, User, LogOut, ArrowLeft, Plus, LogIn, Sun, Moon, Settings } from 'lucide-react';
+import { Home, HardDrive, User, LogOut, Plus, Sun, Moon, Settings } from 'lucide-react';
 
 export const Navbar = ({ 
   user, 
@@ -16,14 +16,12 @@ export const Navbar = ({
 }) => {
   return (
     <header className="navbar">
-      <div className="brand" onClick={onGoHome}>
-        <div className="brand-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
+      <div className="brand" onClick={onGoHome} title="Go to Home">
+        <div className="brand-icon" title="Home">
+          <Home size={19} strokeWidth={2.2} />
         </div>
         <div>
-          <span className="brand-name">DropThing</span>
+          <span className="brand-name brand-name-desktop">DropThing</span>
         </div>
         <span className="brand-badge brand-badge-desktop">Cloud Bridge</span>
       </div>
@@ -38,23 +36,11 @@ export const Navbar = ({
           {theme === 'light' ? <Moon size={17} /> : <Sun size={17} color="#f59e0b" />}
         </button>
 
-        {currentFolder && (
-          <button 
-            className="btn btn-secondary btn-sm nav-action-btn"
-            onClick={onGoHome}
-            title="Leave Locker / Back to Home"
-          >
-            <ArrowLeft size={14} />
-            <span className="nav-btn-text">Leave Locker</span>
-            <span className="nav-btn-text-mobile">Leave</span>
-          </button>
-        )}
-
         {user ? (
           <div className="user-nav-group">
             {currentView !== 'dashboard' && (
               <button
-                className={`btn btn-secondary btn-sm nav-action-btn ${currentFolder ? 'desktop-only' : ''}`}
+                className="btn btn-secondary btn-sm nav-action-btn"
                 onClick={onOpenDashboard}
                 title="My Drive Spaces"
               >
@@ -94,10 +80,10 @@ export const Navbar = ({
             </button>
           </div>
         ) : (
-          <button className="btn btn-secondary btn-sm nav-action-btn" onClick={onOpenAuth}>
-            <LogIn size={15} color="var(--accent-primary)" />
+          <button className="btn btn-secondary btn-sm nav-action-btn" onClick={onOpenAuth} title="Sign In to Cloud Drive">
+            <HardDrive size={14} color="var(--accent-cyan)" />
             <span className="nav-btn-text">Sign In / Drive</span>
-            <span className="nav-btn-text-mobile">Sign In</span>
+            <span className="nav-btn-text-mobile">Drive</span>
           </button>
         )}
       </div>
